@@ -3,7 +3,7 @@
 ### Prerequisites
 1. Install Pip packages
    ```sh
-   pip install groq discord dotenv
+   pip install groq discord dotenv pyttsx3
    ```
 ### Installation
 
