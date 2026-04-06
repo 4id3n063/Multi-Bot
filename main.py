@@ -6,8 +6,8 @@ import string
 import time
 import pyttsx3
 import http.client
-import imagegen
-import ytdownload
+import gen.imagegen as imagegen
+import gen.ytdownload as ytdownload
 import re
 
 load_dotenv()
