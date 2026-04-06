@@ -31,7 +31,7 @@ discord bot i made for myself but wanted to share :3
    ADMIN=
    ```
 
-6. Make sure your discord bot is ready and set up.
+6. Make sure your discord bot is [ready and set up](https://discord.com/developers/applications)
 
 7. Run main.py
    ```sh
