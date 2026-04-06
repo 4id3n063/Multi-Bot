@@ -91,7 +91,7 @@ $ban - self-explanatory
             enable = 0
             await message.channel.send("ai disabled")
 
-    elif message.content.startswith('$adminplace') and (message.author.name == 'j33zx' or message.author.name == 'saulgoodman3516'): # might need to change this
+    elif message.content.startswith('$adminplace') and any(role.name == os.environ.get("ADMIN") for role in message.author.roles): # might need to change this
        await message.channel.send('yes mr. sigma')
     elif message.content.startswith('$wipe'):
         if os.path.exists(LOG_FILE):
@@ -102,13 +102,13 @@ $ban - self-explanatory
         system_prompt = message.content[len('$prompt '):].strip()
         print("prompt set to: " + system_prompt)
         await message.channel.send('changed to ' + system_prompt)
-    elif message.content.startswith('$kick') and (message.author.name == 'j33zx' or message.author.name == 'saulgoodman3516'):
+    elif message.content.startswith('$kick') and any(role.name == os.environ.get("ADMIN") for role in message.author.roles):
         if message.mentions:
             await message.mentions[0].kick()
             await message.channel.send(f'kicked {message.mentions[0]}')
         else:
             await message.channel.send('mention someone idiot')
-    elif message.content.startswith('$ban') and (message.author.name == 'j33zx' or message.author.name == 'saulgoodman3516'):
+    elif message.content.startswith('$ban') and any(role.name == os.environ.get("ADMIN") for role in message.author.roles):
         if message.mentions:
             await message.mentions[0].ban()
             await message.channel.send(f'banned {message.mentions[0]}')
