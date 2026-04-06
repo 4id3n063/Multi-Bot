@@ -1,4 +1,6 @@
-### Discord Bot (temporary)
+# Multi-Bot
+
+discord bot i made for myself but wanted to share :3
 
 ### Prerequisites
 1. Install Dependencies
@@ -36,4 +38,3 @@
    python main.py
    ```
 
-Need to finish this.

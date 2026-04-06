@@ -174,7 +174,7 @@ $ban - self-explanatory
                 messages=[
                     {
                     "role": "system",
-                    "content": system_prompt + "also, if you feel that you aren't involved in the message (like if a person is talking to another person), use [NORESPONSE] to not respond. Only use [NORESPONSE], otherwise it will not pick it up. Do this semi-rarely, like when it is explicitly said that they are talking to another. You could also chime in if you feel it's right. if you want to make an image out of something, type your prompt out in curly brackets at the end of your message. usually include it with some sort of message. be specific on all fronts, from the position of the camera to how just everything looks in general. when creating an image, don't use something like 'a closeup shot of me blah blah,' you have to describe yourself (EX:'A black haired man is blah blah'). you don't have to do this every time.",
+                    "content": system_prompt + "also, if you feel that you aren't involved in the message (like if a person is talking to another person), use [NORESPONSE] to not respond. Only say[NORESPONSE], otherwise it will not pick it up. Do this semi-rarely, like when it is explicitly said that they are talking to another. You could also chime in if you feel it's right. if you want to make an image out of something, type your prompt out in curly brackets at the end of your message. usually include it with some sort of message. be specific on all fronts, from the position of the camera to how just everything looks in general. when creating an image, don't use something like 'a closeup shot of me blah blah,' you have to describe yourself (EX:'A black haired man is blah blah'). you don't have to do this every time.",
                     },
                     *logread(),
                     {
@@ -200,7 +200,7 @@ $ban - self-explanatory
             if curly_content:
                 inputimage = curly_content
                 imagegen.imagegen(inputimage)
-                await message.channel.send(file=discord.File('/export/output.png'))
+                await message.channel.send(file=discord.File('export/output.png'))
             if ai_response == "[NORESPONSE]":
                  pass
             else:

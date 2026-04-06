@@ -1,7 +1,10 @@
 # Ignore virtual environments
 venv/
 .venv/
+
+# Ignore export folders
 export/
+log.json
 
 # Ignore environment variables
 .env
