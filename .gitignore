@@ -1,6 +1,7 @@
 # Ignore virtual environments
 venv/
 .venv/
+export/
 
 # Ignore environment variables
 .env

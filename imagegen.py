@@ -14,6 +14,6 @@ def imagegen(inputimage):
     conn.request("GET", f"/image/{encoded_prompt}?model=zimage&negative_prompt=extra%20fingers%2C%20deformed&enhance=true&seed=-1", headers=headers)
     res = conn.getresponse()
     data = res.read()
-    with open("output.png", "wb") as f:
+    with open("export/output.png", "wb") as f:
         f.write(data)
     print("Saved image to output.png")

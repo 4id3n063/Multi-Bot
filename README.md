@@ -20,7 +20,11 @@
    DISCORD_BOT_TOKEN=
    POLL_API=
    ```
-6. Run main.py
+6. Download dependencies
+   ```sh
+   pip install yt_dlp pyttsx3 groq discord dotenv ## kinda forgot
+   ```
+7. Run main.py
    ```sh
    python main.py
    ```

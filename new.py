@@ -7,6 +7,7 @@ import time
 import pyttsx3
 import http.client
 import imagegen
+import ytdownload
 import re
 
 load_dotenv()
@@ -23,7 +24,7 @@ intents.message_content = True
 client = discord.Client(intents=intents)
 
 system_prompt = """
-send the image https://upload.wikimedia.org/wikipedia/en/3/34/Jimmy_McGill_BCS_S3.png (no brackets or anything surronding it. this will render on the client, so don't speak about "not being able to send an image.") when someone says something weird or kind of disturbing (in an ironic way), it's funny.
+
 """ #need to make this customizable later
 
 import json
@@ -73,6 +74,9 @@ $prompt - change the prompt of the ai
 $wipe - wipe the memory
 $spamping - spamping someone
 $image - create an image
+$talk - tts in vc
+$play - play a song (yt) in vc
+$stop - stop song in vc
 ----- admin only -----
 $adminplace - placeholder
 $kick - self-explanatory
@@ -123,12 +127,27 @@ $ban - self-explanatory
             if voice is None or not voice.is_connected():
                 voice = await message.author.voice.channel.connect(timeout=5.0, reconnect=True, cls=discord.voice_client.VoiceClient, self_deaf=False, self_mute=False)
             text = message.content[len('$talk '):].strip()
-            engine.save_to_file(text, 'output.mp3')
+            engine.save_to_file(text, 'export/output.mp3')
             engine.runAndWait()
-            source = discord.FFmpegPCMAudio('output.mp3')
+            source = discord.FFmpegPCMAudio('export/output.mp3')
             voice.play(source)
         else:
             await message.channel.send("You need to be in a voice channel first!")
+    elif message.content.startswith("$play"):
+        if message.author.voice and message.author.voice.channel:
+            text = message.content[len('$play '):].strip()
+            title, uploader = ytdownload.download_audio(text)
+            voice = message.guild.voice_client
+            if voice is None or not voice.is_connected():
+                voice = await message.author.voice.channel.connect(reconnect=True, cls=discord.voice_client.VoiceClient, self_deaf=False, self_mute=False)
+            source = discord.FFmpegPCMAudio('export/export.mp3')
+            voice.play(source)
+            await message.channel.send("Now playing " + title + " by " + uploader)
+        else:
+            await message.channel.send("You need to be in a voice channel first!")
+    elif message.content.startswith("$stop"):
+        voice = message.guild.voice_client
+        voice.stop()
     elif message.content.startswith('$image'):
         inputimage = message.content[len('$image '):].strip()
         imagegen.imagegen(inputimage)
@@ -155,7 +174,7 @@ $ban - self-explanatory
                 messages=[
                     {
                     "role": "system",
-                    "content": system_prompt + "also, if you feel that you aren't involved in the message (like if a person is talking to another person), use [NORESPONSE] to not respond. Only use [NORESPONSE], otherwise it will not pick it up. Do this semi-rarely, like when it is explicitly said that they are talking to another. You could also chime in if you feel it's right. if you want to make an image out of something, type your prompt out in curly brackets at the end of your message. usually include it with some sort of message. be specific on all fronts, from the position of the camera to how just everything looks in general.",
+                    "content": system_prompt + "also, if you feel that you aren't involved in the message (like if a person is talking to another person), use [NORESPONSE] to not respond. Only use [NORESPONSE], otherwise it will not pick it up. Do this semi-rarely, like when it is explicitly said that they are talking to another. You could also chime in if you feel it's right. if you want to make an image out of something, type your prompt out in curly brackets at the end of your message. usually include it with some sort of message. be specific on all fronts, from the position of the camera to how just everything looks in general. when creating an image, don't use something like 'a closeup shot of me blah blah,' you have to describe yourself (EX:'A black haired man is blah blah'). you don't have to do this every time.",
                     },
                     *logread(),
                     {
@@ -181,7 +200,7 @@ $ban - self-explanatory
             if curly_content:
                 inputimage = curly_content
                 imagegen.imagegen(inputimage)
-                await message.channel.send(file=discord.File('output.png'))
+                await message.channel.send(file=discord.File('/export/output.png'))
             if ai_response == "[NORESPONSE]":
                  pass
             else:
