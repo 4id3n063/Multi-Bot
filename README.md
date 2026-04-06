@@ -1,9 +1,9 @@
 ### Discord Bot (temporary)
 
 ### Prerequisites
-1. Install Pip packages
+1. Install Dependencies
    ```sh
-   pip install groq discord dotenv pyttsx3
+   pip install yt_dlp pyttsx3 groq discord dotenv
    ```
 ### Installation
 
@@ -14,16 +14,13 @@
    ```sh
    git clone https://github.com/4id3n063/bot.git
    ```
-5. Create a new .env file and enter both of your APIs under
+5. Create a new .env file and enter all of your APIs under
    ```env
    GROQ_API_KEY=
    DISCORD_BOT_TOKEN=
    POLL_API=
    ```
-6. Download dependencies
-   ```sh
-   pip install yt_dlp pyttsx3 groq discord dotenv ## kinda forgot
-   ```
+6. Make sure your discord bot is ready and set up.
 7. Run main.py
    ```sh
    python main.py
