@@ -3,10 +3,14 @@
 discord bot i made for myself but wanted to share :3
 
 ### Prerequisites
-1. Install Dependencies
+1. Install Pip Dependencies
    ```sh
-   pip install yt_dlp pyttsx3 groq discord dotenv
+   pip install yt_dlp pyttsx3 groq discord dotenv davey pynacl
    ```
+2. Install FFmpeg
+   - Windows: https://ffmpeg.org/download.html#build-windows
+   - Mac: `brew install ffmpeg`
+   - Linux: `sudo pacman -S ffmpeg`
 ### Installation
 
 1. Get a Groq API key at https://console.groq.com/keys
