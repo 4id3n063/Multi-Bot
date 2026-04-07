@@ -11,6 +11,10 @@ discord bot i made for myself but wanted to share :3
    - Windows: https://ffmpeg.org/download.html#build-windows
    - Mac: `brew install ffmpeg`
    - Linux: `sudo pacman -S ffmpeg`
+3. Install eSpeak
+   - Windows: https://sourceforge.net/projects/espeak/files/espeak/espeak-1.48.04/espeak-1.48.04-win32.zip/download
+   - Mac: `brew install espeak espeak-ng`
+   - Linux: `sudo pacman -S espeak espeak-ng`
 ### Installation
 
 1. Get a Groq API key at https://console.groq.com/keys
