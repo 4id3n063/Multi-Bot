@@ -48,7 +48,7 @@ async def makechannel(message):
 
     try:
         memory(next_tick)
-        await category.create_text_channel(
+        channel = await category.create_text_channel(
             name=channel_name,
             overwrites=overwrites
         )
@@ -57,5 +57,5 @@ async def makechannel(message):
         await message.channel.send(f"Failed to create ticket channel: {exc}")
         return
 
-    await message.channel.send('howdy')
+    await channel.send(f'{admin_role.mention}')
 

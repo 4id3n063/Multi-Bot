@@ -10,6 +10,23 @@ import gen.imagegen as imagegen
 import gen.ytdownload as ytdownload
 import re
 import ticket
+import gen.ai
+import schedule
+import asyncio
+import json
+
+async def reset():
+    print("dementia!")
+    file_path = "log.json"
+
+    if os.path.exists(file_path):
+        os.remove(file_path)
+        print("memory reset")
+
+async def scheduler_loop():
+    while True:
+        schedule.run_pending()
+        await asyncio.sleep(1)
 
 
 load_dotenv()
@@ -29,60 +46,52 @@ system_prompt = """
 
 """ #need to make this customizable later
 
-import json
-
-LOG_FILE = "log.json"
-
-def logging(userinput, ai_response):
-    data = []
-
-    if os.path.exists(LOG_FILE):
-        with open(LOG_FILE, "r") as f:
-            data = json.load(f)
-
-    data.append({"role": "user", "content": userinput})
-    data.append({"role": "assistant", "content": ai_response})
-
-    with open(LOG_FILE, "w") as f:
-        json.dump(data, f, indent=2)
 
 
-def logread():
-    if os.path.exists(LOG_FILE):
-        with open(LOG_FILE, "r") as f:
-            return json.load(f)
-    return []
 
 
-clientgroq = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+
+
+
+
 @client.event
 async def on_ready():
+    global aichannel
+    aichannel = client.get_channel(1509952955548307487)
+
     print(f'We have logged in as {client.user}')
 
+    # schedule the reset
+    schedule.every().day.at("12:00").do(
+        lambda: asyncio.create_task(reset())
+    )
+
+    # start scheduler loop
+    client.loop.create_task(scheduler_loop())
 @client.event
 async def on_message(message):
     global system_prompt
 
+
     if message.author == client.user:
         return
-
-
-
     if message.content.startswith('$help'):
         await message.channel.send('''
 $help - help
 $msgenable - enable/disable the ai
 $prompt - change the prompt of the ai
-$wipe - wipe the memory
+$wipe - wipe the memory (automatically resets at 12:00 CDT)
 $spamping - spamping someone
 $image - create an image
 $talk - tts in vc
 $play - play a song (yt) in vc
 $stop - stop song in vc
+$ticket - create a ticket
 ----- admin only -----
 $adminplace - placeholder
 $kick - self-explanatory
 $ban - self-explanatory
+$resolve - resolves a ticket, use in the ticket channel
         ''')
     elif message.content.startswith('$msgenable'):
         global enable
@@ -96,8 +105,8 @@ $ban - self-explanatory
     elif message.content.startswith('$adminplace') and any(role.name == os.environ.get("ADMIN") for role in message.author.roles): # might need to change this
        await message.channel.send('yes mr. sigma')
     elif message.content.startswith('$wipe'):
-        if os.path.exists(LOG_FILE):
-            os.remove(LOG_FILE)
+        if os.path.exists(gen.ai.LOG_FILE):
+            os.remove(gen.ai.LOG_FILE)
         await message.channel.send('memory wiped')
         print('memory wiped')
     elif message.content.startswith('$prompt'):
@@ -156,6 +165,7 @@ $ban - self-explanatory
         await message.channel.send(file=discord.File('output.png'))
     elif message.content.startswith('$ticket'):
         print("ticket was made")
+        await message.delete()
         await ticket.makechannel(message)
     elif message.content.startswith('$resolve') and any(role.name == os.environ.get("ADMIN") for role in message.author.roles):
         print("resovled")
@@ -177,46 +187,9 @@ $ban - self-explanatory
             await message.delete()
             await message.channel.send('no')
 
-    if enable == 1:
-        if not message.content.startswith('$'):
-            global completion
-            completion = clientgroq.chat.completions.create(
-                messages=[
-                    {
-                    "role": "system",
-                    "content": system_prompt + "also, if you feel that you aren't involved in the message (like if a person is talking to another person), use [NORESPONSE] to not respond. Only say[NORESPONSE], otherwise it will not pick it up. Do this semi-rarely, like when it is explicitly said that they are talking to another. You could also chime in if you feel it's right.",
-                    },
-                    *logread(),
-                    {
-                    "role": "user",
-                    "content": message.author.name + ": " + message.content
-                    }
-                ], 
-            model="llama-3.3-70b-versatile",
 
-            )
-            global userinput
-            ai_response = completion.choices[0].message.content
-            print(message.author.name + ": " + message.content)
-            print("AI response:",completion.choices[0].message.content)
-            userinput = message.author.name + ": " + message.content
-            logging(userinput, ai_response)
-
-            curly_match = re.search(r'\{(.+?)\}', ai_response)
-            curly_content = curly_match.group(1) if curly_match else None
-
-            clean_response = re.sub(r'\{.+?\}', '', ai_response).strip()
-
-            if curly_content:
-                inputimage = curly_content
-                imagegen.imagegen(inputimage)
-                await message.channel.send(file=discord.File('export/output.png'))
-            if ai_response == "[NORESPONSE]":
-                 pass
-            else:
-                await message.channel.typing()
-                await message.channel.send(clean_response)
-            
+    if enable == 1 and message.channel == aichannel:
+        await gen.ai.callAI(system_prompt, message)
 
 
 
