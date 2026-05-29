@@ -5,6 +5,7 @@ venv/
 # Ignore export folders
 export/
 log.json
+tick.txt
 
 # Ignore environment variables
 .env
@@ -12,3 +13,6 @@ log.json
 # Python cache
 __pycache__/
 *.pyc
+
+#test ollama version
+omain.py

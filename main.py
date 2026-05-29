@@ -9,6 +9,8 @@ import http.client
 import gen.imagegen as imagegen
 import gen.ytdownload as ytdownload
 import re
+import ticket
+
 
 load_dotenv()
 global enable
@@ -152,7 +154,15 @@ $ban - self-explanatory
         inputimage = message.content[len('$image '):].strip()
         imagegen.imagegen(inputimage)
         await message.channel.send(file=discord.File('output.png'))
-
+    elif message.content.startswith('$ticket'):
+        print("ticket was made")
+        await ticket.makechannel(message)
+    elif message.content.startswith('$resolve') and any(role.name == os.environ.get("ADMIN") for role in message.author.roles):
+        print("resovled")
+        if message.channel.name.startswith('ticket'):
+            await message.channel.delete()
+        else:
+            await message.channel.send("be in a ticket")
     elif message.content.startswith('$'):
         await message.channel.send('unknown command use $help')
     
@@ -174,7 +184,7 @@ $ban - self-explanatory
                 messages=[
                     {
                     "role": "system",
-                    "content": system_prompt + "also, if you feel that you aren't involved in the message (like if a person is talking to another person), use [NORESPONSE] to not respond. Only say[NORESPONSE], otherwise it will not pick it up. Do this semi-rarely, like when it is explicitly said that they are talking to another. You could also chime in if you feel it's right. if you want to make an image out of something, type your prompt out in curly brackets at the end of your message. usually include it with some sort of message. be specific on all fronts, from the position of the camera to how just everything looks in general. when creating an image, don't use something like 'a closeup shot of me blah blah,' you have to describe yourself (EX:'A black haired man is blah blah'). you don't have to do this every time.",
+                    "content": system_prompt + "also, if you feel that you aren't involved in the message (like if a person is talking to another person), use [NORESPONSE] to not respond. Only say[NORESPONSE], otherwise it will not pick it up. Do this semi-rarely, like when it is explicitly said that they are talking to another. You could also chime in if you feel it's right.",
                     },
                     *logread(),
                     {
