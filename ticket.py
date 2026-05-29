@@ -26,10 +26,7 @@ async def makechannel(message):
 
     admin_role_name = os.environ.get("ADMIN")
     admin_role = discord.utils.get(guild.roles, name=admin_role_name)
-    category = discord.utils.get(guild.categories, name="tickets")
-
-    if category is None:
-        return await message.channel.send("No category named `tickets` found.")
+    category = discord.utils.get(guild.categories, name="ticket")
 
     if not admin_role_name:
         return await message.channel.send("The ADMIN role name is not configured in the environment.")

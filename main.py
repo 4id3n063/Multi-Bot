@@ -79,18 +79,18 @@ async def on_message(message):
         await message.channel.send('''
 $help - help
 $msgenable - enable/disable the ai
-$prompt - change the prompt of the ai
+$prompt - change the prompt of the ai (Usage: $prompt (prompt))
 $wipe - wipe the memory (automatically resets at 12:00 CDT)
-$spamping - spamping someone
-$image - create an image
-$talk - tts in vc
-$play - play a song (yt) in vc
+$spamping - spamping someone (Usage: $spamping (user))
+$image - create an image (Usage: $image (prompt))
+$talk - tts in vc (Usage: $talk (words))
+$play - play a song (yt) in vc (Usage: $play (link))
 $stop - stop song in vc
 $ticket - create a ticket
 ----- admin only -----
 $adminplace - placeholder
-$kick - self-explanatory
-$ban - self-explanatory
+$kick - self-explanatory (Usage: $kick (user))
+$ban - self-explanatory (Usage: $ban (user))
 $resolve - resolves a ticket, use in the ticket channel
         ''')
     elif message.content.startswith('$msgenable'):
@@ -162,7 +162,7 @@ $resolve - resolves a ticket, use in the ticket channel
     elif message.content.startswith('$image'):
         inputimage = message.content[len('$image '):].strip()
         imagegen.imagegen(inputimage)
-        await message.channel.send(file=discord.File('output.png'))
+        await message.channel.send(file=discord.File('export/output.png'))
     elif message.content.startswith('$ticket'):
         print("ticket was made")
         await message.delete()
